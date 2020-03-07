@@ -3,7 +3,8 @@
 
 library(tidyverse)
 library(here)
-
+library(grid)
+library(gridExtra)
 trimesters <- tibble(week = c(0, 13, 27, 40), type="trimester")
 visit_freq <- tibble(week = c(seq(from = 7, to = 28, by = 4), 
                               seq(from=29, to = 36, by = 2), 
@@ -89,7 +90,7 @@ two_points <- d %>% select(week, type) %>%
 
 weeks_represented <- unique(d$week) %>% sort()
 
-ggplot(d, aes(x=week, y=type, fill=clss, label=label)) + 
+p <- ggplot(d, aes(x=week, y=type, fill=clss, label=label)) + 
   geom_vline(xintercept = trimesters$week, linetype="dotted") + 
   geom_point(pch=21, size=2) + 
   geom_line(data = subset(d, type %in% two_points)) + 
@@ -98,18 +99,20 @@ ggplot(d, aes(x=week, y=type, fill=clss, label=label)) +
   geom_line(data = subset(d, type %in% "Ultrasound" & week <14)) +
   geom_point(pch=21, size=2) + 
   theme_minimal() +
-  ylab("") + xlab("Weeks of Pregnancy") +
+  ylab("") + xlab("Week of Pregnancy") +
   labs(fill="") +
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank()) +
   scale_x_continuous(breaks = seq(-6, 44, 2)) + 
   scale_fill_brewer(palette = "Set2") +
   ggtitle("2019 Guidelines on Prenatal Care & Diseases in Pregnancy")
-  
-ggsave(filename = "ob_timeline.png", 
+p2 <- grid.arrange(p, bottom = textGrob("© 2020 Daniel Piqué ", x = 1, 
+                                    hjust = 1, gp = gpar(fontsize = 9)))
+
+ggsave(filename = "ob_timeline.png", plot = p2,
        device = "png", path = here("images/"), 
        width = 6.4, height = 4.6, scale = 1.6 )
 
-ggsave(filename = "ob_timeline.pdf", 
+ggsave(filename = "ob_timeline.pdf", plot = p2,
        device = "pdf", path = here("images/"), 
        width = 6.4, height = 4.6, scale = 1.6 )
 
