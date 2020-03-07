@@ -2,4 +2,4 @@
 
 A project completed during my obgyn rotation during medical school. Useful as a reference for medical students memorizing the required care and diseases that occur during the different trimesters of pregnancy.
 
-![alt text](image)
+![image of obgyn timeline](./images/ob_timeline.png)
